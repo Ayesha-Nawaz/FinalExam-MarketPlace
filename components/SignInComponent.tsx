@@ -58,7 +58,7 @@ const SignInComponent: React.FC = () => {
   return (
     <View style={styles.container}>
       {/* App Name Heading */}
-      <Text style={styles.appName}>EduVerse</Text>
+      <Text style={styles.appName}>MarketPlaceX</Text>
 
       <View style={styles.card}>
         <Text style={styles.heading}>Sign In</Text>

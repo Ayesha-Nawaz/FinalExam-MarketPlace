@@ -8,6 +8,7 @@ import {
   Image,
   Pressable,
   Alert,
+  TextInput,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { collection, query, where, getDocs } from "firebase/firestore";
@@ -18,6 +19,7 @@ const CategoryProductsScreen = () => {
   const { category } = useLocalSearchParams(); // Get the category from navigation params
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchCategoryProducts = async () => {
@@ -49,6 +51,14 @@ const CategoryProductsScreen = () => {
     Alert.alert("Added to Cart", `${product.name} has been added to your cart.`);
   };
 
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const renderProduct = ({ item }) => (
     <View style={styles.productItem}>
       {item.image && (
@@ -56,7 +66,7 @@ const CategoryProductsScreen = () => {
       )}
       <Text style={styles.productName}>{item.name}</Text>
       {item.price && <Text style={styles.productPrice}>${item.price}</Text>}
-      
+
       <Link
         href={{
           pathname: "/ProductDetails",
@@ -80,11 +90,20 @@ const CategoryProductsScreen = () => {
       resizeMode="cover"
     >
       <Text style={styles.headerText}>{category} Products</Text>
+      
+      {/* Search Input */}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search Products"
+        value={searchQuery}
+        onChangeText={handleSearch}
+      />
+
       {loading ? (
         <Text style={styles.loadingText}>Loading products...</Text>
-      ) : products.length > 0 ? (
+      ) : filteredProducts.length > 0 ? (
         <FlatList
-          data={products}
+          data={filteredProducts}
           renderItem={renderProduct}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.flatListContent}
@@ -161,6 +180,14 @@ const styles = StyleSheet.create({
     color: "#FFD700",
     textDecorationLine: "underline",
     fontSize: 16,
+  },
+  searchInput: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 20,
+    fontSize: 16,
+    elevation: 3,
   },
 });
 

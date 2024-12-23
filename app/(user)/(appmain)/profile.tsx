@@ -42,7 +42,6 @@ export default function ProfileScreen() {
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
-          {/* Header with Profile Image and Edit/Logout Buttons */}
           <View style={styles.header}>
             <Image
               source={{
@@ -60,18 +59,16 @@ export default function ProfileScreen() {
             </View>
           </View>
 
-          {/* User Info */}
           {user && (
             <View style={styles.userInfo}>
               <Text style={styles.userName}>{user.displayName || "N/A"}</Text>
               <Text style={styles.userInfoText}>Email: {user.email}</Text>
               <Text style={styles.userInfoText}>Age: {user.age || "N/A"}</Text>
-              <Text style={styles.userInfoText}>Phone: {user.phoneNumber || "N/A"}</Text> {/* Phone Number */}
+              <Text style={styles.userInfoText}>Phone: {user.phoneNumber || "N/A"}</Text> 
               <Text style={styles.userInfoText}>Address: {user.address || "N/A"}</Text>
             </View>
           )}
 
-          {/* More Actions */}
           <View style={styles.actionsContainer}>
             <TouchableOpacity style={styles.actionButton} onPress={() => alert("Order History")}>
               <Text style={styles.actionButtonText}>View Orders</Text>

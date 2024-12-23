@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, Alert, Button, RefreshControl, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Alert,
+  Button,
+  RefreshControl,
+  ImageBackground,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const CartScreen = () => {
+  const navigation = useNavigation(); // To navigate to other screens
   const [cart, setCart] = useState({ products: [] });
   const [isRefreshing, setIsRefreshing] = useState(false); // State to handle the pull-to-refresh state
 
@@ -43,16 +54,28 @@ const CartScreen = () => {
     }
   };
 
+  const handleCheckout = (product) => {
+    navigation.navigate("Checkout", { product }); // Navigate to Checkout screen with selected product
+  };
+
   const renderCartItem = ({ item }) => (
     <View style={styles.cartItem}>
       <Text style={styles.productName}>{item.name}</Text>
       <Text style={styles.productPrice}>${item.price}</Text>
       <Text style={styles.productQuantity}>Quantity: {item.quantity}</Text>
-      <Button
-        title="Remove"
-        onPress={() => handleRemoveProduct(item.name)}
-        color="#FF0000"
-      />
+
+      <View style={styles.buttonsContainer}>
+        <Button
+          title="Remove"
+          onPress={() => handleRemoveProduct(item.name)}
+          color="#FF4D4D"
+        />
+        <Button
+          title="Checkout"
+          onPress={() => handleCheckout(item)} // Navigate to checkout screen
+          color="#007BFF"
+        />
+      </View>
     </View>
   );
 
@@ -65,21 +88,23 @@ const CartScreen = () => {
       source={require('@/assets/images/image.jpeg')} // Path to your background image
       style={styles.container}
     >
-      {cart.products.length === 0 ? (
-        <Text style={styles.emptyCartText}>Your cart is empty.</Text>
-      ) : (
-        <FlatList
-          data={cart.products}
-          renderItem={renderCartItem}
-          keyExtractor={(item) => item.name}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={onRefresh} // Trigger the pull-to-refresh
-            />
-          }
+      <View style={{ flex: 1 }}>
+        {/* Pull to Refresh functionality */}
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={onRefresh} // Trigger the pull-to-refresh
+          style={styles.refreshControl}
         />
-      )}
+        {cart.products.length === 0 ? (
+          <Text style={styles.emptyCartText}>Your cart is empty.</Text>
+        ) : (
+          <FlatList
+            data={cart.products}
+            renderItem={renderCartItem}
+            keyExtractor={(item) => item.name}
+          />
+        )}
+      </View>
     </ImageBackground>
   );
 };
@@ -91,43 +116,45 @@ const styles = StyleSheet.create({
     justifyContent: "center", // Center content vertically
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Slight overlay to make text readable over the background
   },
-  title: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#fff", // White text color for better contrast on dark backgrounds
-    marginBottom: 20,
-    textAlign: "center",
-  },
   emptyCartText: {
-    fontSize: 18,
+    fontSize: 20,
     color: "#fff", // White color for empty cart message
     textAlign: "center",
     marginTop: 20,
+    fontWeight: "bold",
   },
   cartItem: {
-    padding: 15,
-    marginVertical: 12,
-    backgroundColor: "rgba(255, 255, 255, 0.8)", // Light transparent background
-    borderRadius: 8,
+    padding: 20,
+    marginVertical: 15,
+    backgroundColor: "rgba(255, 255, 255, 0.9)", // Slightly transparent background
+    borderRadius: 12,
     elevation: 5,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowRadius: 6,
+    marginHorizontal: 10,
   },
   productName: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#333", // Dark color for product name
+    marginBottom: 8,
   },
   productPrice: {
-    fontSize: 16,
+    fontSize: 18,
     color: "#008000", // Green for price
+    marginBottom: 8,
   },
   productQuantity: {
     fontSize: 16,
     marginVertical: 5,
     color: "#555", // Dark gray for quantity
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
   },
 });
 

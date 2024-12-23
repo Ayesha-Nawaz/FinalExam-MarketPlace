@@ -19,11 +19,10 @@ export default function MainScreen() {
               Welcome to <Text style={styles.marketplaceText}>MarketPlaceX</Text>
             </Text>
             <Text style={styles.subtitleText}>
-              Unlock Your Potential, Empower Your Future
+            MarketplaceX connects buyers and sellers, offering everything from the latest gadgets to daily essentials
             </Text>
           </View>
 
-          {/* Marketplace Highlights */}
           <View style={styles.highlightsContainer}>
             <Text style={styles.highlightTitle}>Why Choose MarketPlaceX?</Text>
             <Text style={styles.highlightText}>
@@ -40,7 +39,6 @@ export default function MainScreen() {
             </Text>
           </View>
 
-          {/* Explore More Button */}
           <View style={styles.buttonContainer}>
             <Pressable
               style={styles.exploreButton}
